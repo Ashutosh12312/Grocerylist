@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🛒 Smart Grocery List</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</head>
+<body>
+
+<div class="container">
+    <h1 class="text-center mt-4">🛒 Smart Grocery List</h1>
+
+    <div class="input-group mb-3">
+        <input type="text" id="groceryInput" class="form-control" placeholder="Enter item name..." autofocus>
+        <button id="openModalBtn" class="btn btn-success">Add Item</button>
+    </div>
+
+    <p class="text-center item-count">Total Items: <span id="itemCount">{{ grocery_list | length }}</span></p>
+
+    <ul id="groceryList" class="list-group">
+        {% for item in grocery_list %}
+        <li class="list-group-item d-flex justify-content-between align-items-center" id="item-{{ loop.index0 }}">
+            <input type="checkbox" class="delete-checkbox" data-index="${data.index}">
+            <strong>{{ item.name }}</strong> ({{ item.quantity }}, ₹{{ item.price }}, {{ item.category }})
+            <span class="delete-btn" onclick="deleteItem({{ loop.index0 }})">
+                <i class="fas fa-trash-alt"></i>
+            </span>
+        </li>
+        {% endfor %}
+    </ul>
+
+    <button id="deleteSelectedBtn" class="btn btn-danger mt-3">Delete Selected</button>
+</div>
+
+<!-- Modal for Adding Item Details -->
+<div class="modal fade" id="addItemModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Enter Item Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <label>Item Name:</label>
+                <input type="text" id="modalItemName" class="form-control" disabled>
+
+                <label>Quantity:</label>
+                <input type="number" id="modalQuantity" class="form-control" placeholder="Enter quantity">
+
+                <label>Price:</label>
+                <input type="number" id="modalPrice" class="form-control" placeholder="Enter price">
+
+                <label>Category:</label>
+                <select id="modalCategory" class="form-control">
+                    <option value="Vegetables">Vegetables</option>
+                    <option value="Fruits">Fruits</option>
+                    <option value="Dairy">Dairy</option>
+                    <option value="Snacks">Snacks</option>
+                    <option value="Beverages">Beverages</option>
+                </select>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button id="saveItemBtn" class="btn btn-primary">Save Item</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+
+</body>
+</html>
